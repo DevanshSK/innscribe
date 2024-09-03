@@ -6,6 +6,7 @@ import com.innscribe.journalApp.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,42 +21,44 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
-    public List<JournalEntry> getAllEntriesByUser(String username){
+    public List<JournalEntry> getAllEntriesByUser(String username) {
         // Search user by username
         User user = userService.findByUsername(username);
-        if(user != null){
+        if (user != null) {
             return user.getJournalEntries();
         }
         return null;
     }
 
-    public JournalEntry saveEntry(JournalEntry journalEntry, String username){
+
+    @Transactional
+    public JournalEntry saveEntry(JournalEntry journalEntry, String username) {
         journalEntry.setDate(LocalDateTime.now());
         JournalEntry savedEntry = journalEntryRepository.save(journalEntry);
 
         User user = userService.findByUsername(username);
-        if(user != null){
+        if (user != null) {
             user.getJournalEntries().add(savedEntry);
             userService.saveUser(user);
         }
         return savedEntry;
     }
 
-    public JournalEntry saveEntry(JournalEntry journalEntry){
+    public JournalEntry saveEntry(JournalEntry journalEntry) {
         return journalEntryRepository.save(journalEntry);
     }
 
-    public Optional<JournalEntry> findById(ObjectId id){
+    public Optional<JournalEntry> findById(ObjectId id) {
         return journalEntryRepository.findById(id);
     }
 
-    public boolean deleteById(ObjectId id, String username){
+    public boolean deleteById(ObjectId id, String username) {
         Optional<JournalEntry> entry = journalEntryRepository.findById(id);
 
-        if(entry.isPresent()){
+        if (entry.isPresent()) {
             // Remove entry reference from User.
             User user = userService.findByUsername(username);
-            if(user != null){
+            if (user != null) {
                 user.getJournalEntries().removeIf(x -> x.getId().equals(id));
                 userService.saveUser(user);
             }

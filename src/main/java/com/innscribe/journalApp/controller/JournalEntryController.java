@@ -47,6 +47,7 @@ public class JournalEntryController {
             JournalEntry savedEntry = journalEntryService.saveEntry(journal, username);
             return new ResponseEntity<>(savedEntry, HttpStatus.CREATED);
         }catch(Exception e){
+            System.out.println("Main exception : " + e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
