@@ -1,5 +1,7 @@
 package com.innscribe.journalApp.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.innscribe.journalApp.util.ObjectSerializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -15,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JournalEntry {
     @Id
+    @JsonSerialize(using = ObjectSerializer.class)
     private ObjectId id;
     @NonNull
     private String title;

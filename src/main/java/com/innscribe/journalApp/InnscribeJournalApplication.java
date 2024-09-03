@@ -9,10 +9,16 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
+@EnableTransactionManagement
 public class InnscribeJournalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(InnscribeJournalApplication.class, args);
+	}
+
+	@Bean
+	public PlatformTransactionManager add(MongoDatabaseFactory dbFactory){
+		return new MongoTransactionManager(dbFactory);
 	}
 
 }

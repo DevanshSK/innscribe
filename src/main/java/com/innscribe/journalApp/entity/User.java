@@ -1,5 +1,7 @@
 package com.innscribe.journalApp.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.innscribe.journalApp.util.ObjectSerializer;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -15,6 +17,7 @@ import java.util.List;
 @Data
 public class User {
     @Id
+    @JsonSerialize(using= ObjectSerializer.class)
     private ObjectId id;
 
     @Indexed(unique = true)
